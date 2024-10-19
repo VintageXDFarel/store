@@ -1,5 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZScriptz Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -106,7 +109,13 @@
             cursor: pointer;
         }
     </style>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
+        // Inisialisasi EmailJS
+        (function() {
+            emailjs.init("XSPecq3eXz_M630hf");  // Ganti 'YOUR_USER_ID' dengan User ID dari EmailJS Anda
+        })();
+
         function orderRdpVps() {
             document.getElementById('dialog-rdp-vps').showModal();
         }
@@ -131,38 +140,31 @@
                 return;
             }
 
-            const webhookUrl = "https://discord.com/api/webhooks/1296532357485953095/KtljXG1lynVNtvRIgmvjZG1d9MwmzKjRKqhfNlDAToGuT_RCzxAqHYF1K56e01E-6iby";
-            const message = {
-                content: `**Ada orderan nih!\nPembeli: ${name}\nProduk yang dibeli: ${product}\nPayment yang dipilih: ${payment}\nEmail pembeli: ${email}`
+            const emailParams = {
+                name: name,
+                product: product,
+                payment: payment,
+                email: email
             };
 
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(message)
-            }).then(() => {
-                document.getElementById('dialog-buy').close();
-                document.getElementById('dialog-confirm').showModal();
-            }).catch((error) => {
-                alert("Terjadi kesalahan saat mengirim pesanan!");
-                console.error(error);
-            });
+            // Kirim email konfirmasi ke pengguna
+            emailjs.send('service_dg07l95', 'template_dro6gn6', emailParams)
+                .then(function(response) {
+                    document.getElementById('dialog-buy').close();
+                    document.getElementById('dialog-confirm').showModal();
+                }, function(error) {
+                    alert("Terjadi kesalahan saat mengirim email!");
+                    console.error(error);
+                });
         }
         function selectPayment(payment) {
             const paymentDetails = {
-                'dana': 'Silahkan membayar lewat payment DANA 085808326104 (Hari Mariono Akbar)\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar diemail kami/whatsapp kami',
-                'gopay': 'Silahkan membayar lewat GOPAY 085808326104 (VintageXD)\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar diemail kami/whatsapp kami',
-                'bca': 'Silahkan membayar lewat bank BCA (Baitul Chotimah)\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar diemail kami/whatsapp kami',
-                'qris': 'Silahkan membayar lewat QRIS all payment:\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar diemail kami/whatsapp kami'
+                'dana': 'Silahkan membayar lewat DANA 085808326104 (Hari Mariono Akbar)\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar di email atau WhatsApp kami.',
+                'gopay': 'Silahkan membayar lewat GOPAY 085808326104 (VintageXD)\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar di email atau WhatsApp kami.',
+                'bca': 'Silahkan membayar lewat Bank BCA (Baitul Chotimah)\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar di email atau WhatsApp kami.',
+                'qris': 'Silahkan membayar lewat QRIS.\nNB: Setelah membayar jangan lupa mengirim bukti tf/bayar di email atau WhatsApp kami.'
             };
             document.getElementById('payment-details').innerText = paymentDetails[payment];
-            if (payment === 'qris') {
-                document.getElementById('qris-image').style.display = 'block';
-            } else {
-                document.getElementById('qris-image').style.display = 'none';
-            }
             document.getElementById('payment').value = payment;
             document.getElementById('payment-options').style.display = 'none';
         }
@@ -174,7 +176,7 @@
         <div class="subtitle">STORE AMANAH DENGAN HARGA MURAH</div>
 
         <div class="box">
-            <div class="box-title">rdp vps</div>
+            <div class="box-title">RDP VPS</div>
             <div class="box-content">
                 • BERGARANSI FULL •<br>
                 • AWET •<br>
@@ -185,10 +187,10 @@
                 • OS WINDOWS (2012/2016/2019) •
             </div>
         </div>
-        <div class="order-button" onclick="orderRdpVps()">order</div>
+        <div class="order-button" onclick="orderRdpVps()">Order</div>
 
         <div class="box">
-            <div class="box-title">domain</div>
+            <div class="box-title">Domain</div>
             <div class="box-content">
                 • BERGARANSI FULL •<br>
                 • AKTIF 1 TAHUN •<br>
@@ -197,11 +199,10 @@
                 • RESMI CLOUDFLARE •
             </div>
         </div>
-        <div class="order-button" onclick="orderDomain()">order</div>
+        <div class="order-button" onclick="orderDomain()">Order</div>
 
-        </div>
-        <a href="https://wa.me/6285855103347" class="order-button">whatsapp admin store</a>
-        <a href="https://discord.gg/zscriptzstore" class="order-button">server discord store</a>
+        <a href="https://wa.me/6285855103347" class="order-button">WhatsApp Admin Store</a>
+        <a href="https://discord.gg/zscriptzstore" class="order-button">Server Discord Store</a>
 
         <div class="footer">© COPYRIGHT BY <a href="https://www.instagram.com/farelaxz27" target="_blank">FARZY</a></div>
     </div>
@@ -214,46 +215,42 @@
             <div class="product-item" onclick="buyProduct('8GB 4CPU - 60.000')">8GB 4CPU - 60.000</div>
             <div class="product-item" onclick="buyProduct('16GB 8CPU - 120.000 (HABIS)')">16GB 8CPU - 120.000 (HABIS)</div>
         </div>
-        <button class="dialog-button" onclick="closeDialog('dialog-rdp-vps')">Tutup</button>
+        <button class="dialog-button" onclick="closeDialog('dialog-rdp-vps')">Batal</button>
     </dialog>
 
     <dialog id="dialog-domain">
         <p>Anda akan memesan produk Domain. Silakan pilih dari daftar berikut:</p>
         <div class="product-list">
-            <div class="product-item" onclick="buyProduct('.com - 170.000')">.com - 170.000</div>
-            <div class="product-item" onclick="buyProduct('.net - 240.000')">.net - 240.000</div>
-            <div class="product-item" onclick="buyProduct('.xyz - 20.000')">.xyz - 20.000</div>
-            <div class="product-item" onclick="buyProduct('.my.id - 20.000')">.my.id - 20.000</div>
-            <div class="product-item" onclick="buyProduct('.org - 190.000')">.org - 190.000</div>
-            <div class="product-item" onclick="buyProduct('.id - 300.000')">.id - 300.000</div>
-            <div class="product-item" onclick="buyProduct('.biz.id - 70.000')">.biz.id - 70.000</div>
-            <div class="product-item" onclick="buyProduct('.co.id - 350.000')">.co.id - 350.000</div>
-            <div class="product-item" onclick="buyProduct('.or.id - 70.000')">.or.id - 70.000</div>
+            <div class="product-item" onclick="buyProduct('Domain .com - 50.000')">Domain .com - 50.000</div>
+            <div class="product-item" onclick="buyProduct('Domain .net - 60.000')">Domain .net - 60.000</div>
+            <div class="product-item" onclick="buyProduct('Domain .id - 80.000')">Domain .id - 80.000</div>
         </div>
-        <button class="dialog-button" onclick="closeDialog('dialog-domain')">Tutup</button>
+        <button class="dialog-button" onclick="closeDialog('dialog-domain')">Batal</button>
     </dialog>
 
     <dialog id="dialog-buy">
-        <p>Format order:</p>
-        <input type="text" id="name" class="input-field" placeholder="Nama">
-        <input type="text" id="selected-product" class="input-field" placeholder="Produk" readonly>
-        <div id="payment-options" class="payment-options">
+        <p>Silakan masukkan data Anda untuk melanjutkan pembelian:</p>
+        <input type="text" id="name" class="input-field" placeholder="Nama Anda" required>
+        <input type="email" id="email" class="input-field" placeholder="Email Anda" required>
+        <input type="hidden" id="selected-product">
+        <input type="hidden" id="payment">
+        
+        <div class="payment-options" id="payment-options">
+            <p>Pilih metode pembayaran:</p>
             <div class="payment-option" onclick="selectPayment('dana')">DANA</div>
-            <div class="payment-option" onclick="selectPayment('gopay')">GoPay</div>
-            <div class="payment-option" onclick="selectPayment('bca')">BCA</div>
+            <div class="payment-option" onclick="selectPayment('gopay')">GOPAY</div>
+            <div class="payment-option" onclick="selectPayment('bca')">Bank BCA</div>
             <div class="payment-option" onclick="selectPayment('qris')">QRIS</div>
         </div>
         <div id="payment-details"></div>
-        <img alt="QRIS" height="200" id="qris-image" src="https://storage.googleapis.com/a1aa/image/DQfeey2fMzFWiRu705631sfF0PeF8BmfHwK1y6DeermJqFfecC.jpg" style="display:none; margin-top: 10px;" width="200">
-        <input type="hidden" id="payment">
-        <input type="email" id="email" class="input-field" placeholder="Email" required>
-        <button class="dialog-button" onclick="confirmPurchase()">Confirm</button>
-        <button class="dialog-button" onclick="closeDialog('dialog-buy')">Tutup</button>
+
+        <button class="dialog-button" onclick="confirmPurchase()">Konfirmasi Pembelian</button>
+        <button class="dialog-button" onclick="closeDialog('dialog-buy')">Batal</button>
     </dialog>
 
     <dialog id="dialog-confirm">
-        <p>Tunggu untuk admin menjawab melalui email anda, jika admin kami sudah mengemail pesanan anda akan diproses!</p>
+        <p>Terima kasih atas pembelian Anda! Email konfirmasi telah dikirim ke alamat email yang Anda masukkan.</p>
         <button class="dialog-button" onclick="closeDialog('dialog-confirm')">Tutup</button>
     </dialog>
 </body>
-</html>
+        </html>
