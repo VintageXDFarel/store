@@ -148,7 +148,13 @@
             };
 
             // Kirim email konfirmasi ke pengguna
-            emailjs.send('service_dg07l95', 'template_dro6gn6', emailParams)
+            emailjs.send("service_dg07l95","template_dro6gn6",{
+                name: name,
+                product: product,
+                payment: payment,
+                email: email,
+            });
+            //emailjs.send('service_dg07l95', 'template_dro6gn6', emailParams)
                 .then(function(response) {
                     document.getElementById('dialog-buy').close();
                     document.getElementById('dialog-confirm').showModal();
@@ -253,4 +259,4 @@
         <button class="dialog-button" onclick="closeDialog('dialog-confirm')">Tutup</button>
     </dialog>
 </body>
-        </html>
+    </html>
